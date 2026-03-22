@@ -144,8 +144,8 @@
     const bgCtx  = bgCv.getContext('2d');
     const overlay= document.getElementById('modal-overlay');
 
-    const W = cv.width = bgCv.width  = Math.min(window.innerWidth,  440);
-    const H = cv.height= bgCv.height = Math.min(window.innerHeight, 700);
+    const W = cv.width = bgCv.width  = window.innerWidth;
+    const H = cv.height= bgCv.height = window.innerHeight;
 
     /* Posiciones base */
     const TX  = W / 2;                       // tronco X
@@ -166,7 +166,7 @@
         bgCtx.fillRect(0, 0, W, H);
 
         // Luna
-        const lx = W * 0.78, ly = H * 0.11, lr = W * 0.09;
+        const lx = W * 0.82, ly = H * 0.18, lr = W * 0.07;
         const halo = bgCtx.createRadialGradient(lx, ly, lr * 0.7, lx, ly, lr * 2);
         halo.addColorStop(0, 'rgba(255,250,180,0.2)');
         halo.addColorStop(1, 'rgba(255,250,180,0)');
@@ -390,7 +390,7 @@
     function iniciarBalanceo() {
         const tc=document.createElement('canvas');
         tc.width=W; tc.height=H;
-        tc.style.cssText='position:absolute;top:0;left:0;z-index:2;pointer-events:none;';
+        tc.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;';
         document.querySelector('.container').appendChild(tc);
         const tctx=tc.getContext('2d');
         (function tick(){
@@ -411,7 +411,7 @@
     function iniciarBrisa() {
         const bc=document.createElement('canvas');
         bc.width=W; bc.height=H;
-        bc.style.cssText='position:absolute;top:0;left:0;z-index:3;pointer-events:none;';
+        bc.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:3;pointer-events:none;';
         document.querySelector('.container').appendChild(bc);
         const bctx=bc.getContext('2d');
         (function tick(){
@@ -497,45 +497,4 @@
 
     btn.addEventListener('click', () => {
         if (iniciado) return;
-        overlay.style.display = 'flex';
-    });
-
-    document.getElementById('modal-cerrar').addEventListener('click', () => {
-        overlay.style.display = 'none';
-        if (iniciado) return;
-        iniciado = true;
-        btn.classList.add('oculto');
-        cv.classList.add('visible');
-        drawSuelo();
-        animTronco(() => {
-            iniciarBalanceo();
-            animRamas(() => {
-                animFlores(() => {
-                    iniciarBrisa();
-                    setTimeout(() => {
-                        tit.classList.add('visible');
-                        particulas();
-                    }, 300);
-                });
-            });
-        });
-    });
-
-    function animarEstrellas() {
-        const stars=Array.from({length:75},()=>({
-            x:Math.random()*W, y:Math.random()*H*.8,
-            r:.4+Math.random()*1.2, fase:Math.random()*Math.PI*2, vel:.7+Math.random()*1.2
-        }));
-        (function tick(){
-            drawNight();
-            const t=Date.now()/1000;
-            stars.forEach(s=>{
-                const a=.2+.8*(.5+.5*Math.sin(t*s.vel+s.fase));
-                bgCtx.beginPath(); bgCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
-                bgCtx.fillStyle=`rgba(255,255,255,${a.toFixed(2)})`; bgCtx.fill();
-            });
-            requestAnimationFrame(tick);
-        })();
-    }
-
-})();
+        overlay.styl
